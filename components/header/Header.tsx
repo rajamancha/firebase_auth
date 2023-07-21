@@ -8,7 +8,6 @@ const Header = () => {
   const { logOutHandler, user } = UserAuth();
   const [isLogin, setIsLogin] = useState<Boolean>(false);
 
-
   useEffect(() => {
     setIsLogin(user !== null);
   }, [user]);
@@ -21,9 +20,10 @@ const Header = () => {
 
   return (
     <>
-      <header>
+      <header className="ease-in">
         <div className="container">
           <nav className="py-4 flex items-center justify-between">
+
             <ul className="flex items-center justify-start gap-4">
               <li>
                 <Link href="/" className="hover:text-violet-500">

@@ -1,17 +1,17 @@
 "use client";
-import { useContext, createContext, useState, useEffect } from "react";
-import { getUser } from "@/services/auth.services";
-import { useRouter } from "next/navigation";
 import {
-  GoogleAuthProvider,
   UserCredential,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
   signInWithPopup,
+  GoogleAuthProvider,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
 } from "firebase/auth";
-import axios, { AxiosError } from "axios";
 import { auth } from "../firebase";
+import axios, { AxiosError } from "axios";
+import { useRouter } from "next/navigation";
+import { getUser } from "@/services/auth.services";
 import { logInUserType } from "@/services/auth.types";
+import { useContext, createContext, useState, useEffect } from "react";
 
 export interface AuthContextType {
   loader: boolean;
@@ -33,28 +33,28 @@ export const AuthContextProvider = ({
   children: React.ReactNode;
 }) => {
   const [user, setUser] = useState<UserCredential["user"] | null>(null);
-  const [loader, setLoader] = useState<boolean>(false);
+  const [loader, setLoader] = useState<boolean>(true);
   const router = useRouter();
 
   useEffect(() => {
     (async () => {
       const { error } = await getUser();
-
-      if (error) {
-        router.push("/");
-        return;
-      }
       const userJson = localStorage.getItem("user");
       if (userJson) {
         const _user = JSON.parse(userJson);
         setUser(_user);
+        if (error) {
+          router.push("/");
+          return;
+        }
       }
       // if the error did not happen, if everything is alright
-      setLoader(true);
+      setLoader(false);
     })();
   }, []);
 
   const logOutHandler = async () => {
+    setLoader(true);
     try {
       if (confirm("are you sure you want to log out")) {
         localStorage.removeItem("user");
@@ -65,12 +65,14 @@ export const AuthContextProvider = ({
       }
     } catch (e) {
       const error = e as AxiosError;
-
       alert(error.message);
+    } finally {
+      setLoader(false);
     }
   };
 
   const logInHandler = async (payload: logInUserType) => {
+    setLoader(true);
     try {
       if (payload.logInMethod === "google") {
         const provider = new GoogleAuthProvider();
@@ -104,6 +106,8 @@ export const AuthContextProvider = ({
     } catch (e) {
       const error = e as AxiosError;
       alert(error.message);
+    } finally {
+      setLoader(false);
     }
   };
 

@@ -1,63 +1,25 @@
 "use client";
-import React from "react";
 
-import { AxiosError } from "axios";
-import { useRouter } from "next/navigation";
-import { logInUserType } from "@/services/auth.types";
-import { logInUser } from "@/services/auth.services";
 import Link from "next/link";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase";
+import { UserAuth } from "../provider/AuthProvider";
 
 const Login = () => {
-  const { push } = useRouter();
-
+  const { logInHandler } = UserAuth();
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const payload: logInUserType = {
+    logInHandler({
       logInMethod: "email",
+      accountType: "login",
       user: {
         email: event.currentTarget.email.value,
         password: event.currentTarget.password.value,
       },
-    };
-
-    try {
-      signInWithEmailAndPassword(
-        auth,
-        event.currentTarget.email.value,
-        event.currentTarget.password.value
-      )
-        .then((data) => {
-          console.log(data);
-          debugger
-        })
-        .catch((error) => {
-          console.log(error);
-          debugger
-        });
-      // const { data } = await logInUser(payload);
-
-      // alert(data.message);
-
-      // redirect the user to /dashboard
-      push("/dashboard");
-    } catch (e) {
-      const error = e as AxiosError;
-
-      alert(error.message);
-    }
+    });
   };
 
   const signInWithGoogle = () => {
-    try {
-      push("/dashboard");
-    } catch (e) {
-      const error = e as AxiosError;
-
-      alert(error.message);
-    }
+    logInHandler({ logInMethod: "google" });
   };
 
   return (

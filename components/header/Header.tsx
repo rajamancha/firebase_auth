@@ -1,37 +1,22 @@
 "use client";
 
-import { getUser } from "@/services/auth.services";
-import axios, { AxiosError } from "axios";
+import { UserAuth } from "@/app/provider/AuthProvider";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const Header = () => {
+  const { logOutHandler, user } = UserAuth();
   const [isLogin, setIsLogin] = useState<Boolean>(false);
-  const { push } = useRouter();
+
 
   useEffect(() => {
-    (async () => {
-      const { user, error } = await getUser();
-
-      if (user) {
-        setIsLogin(true);
-        return;
-      }
-    })();
-  }, []);
+    setIsLogin(user !== null);
+  }, [user]);
 
   const handleLogout = async () => {
     try {
-      await axios.get("/api/auth/logout");
-      setIsLogin(false);
-      alert("Logout successfully");
-      push("/");
-    } catch (e) {
-      const error = e as AxiosError;
-
-      alert(error.message);
-    }
+      await logOutHandler();
+    } catch (error) {}
   };
 
   return (
@@ -66,7 +51,10 @@ const Header = () => {
 
             <ul className="flex items-center justify-start gap-4">
               {isLogin ? (
-                <li onClick={handleLogout} className="hover:text-violet-500 cursor-pointer">
+                <li
+                  onClick={handleLogout}
+                  className="hover:text-violet-500 cursor-pointer"
+                >
                   logout
                 </li>
               ) : (

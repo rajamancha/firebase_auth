@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getUser } from "@/services/auth.services";
@@ -14,7 +15,7 @@ export default function SignUpLayout({
 
   useEffect(() => {
     (async () => {
-      const { user, error } = await getUser();
+      const { user } = await getUser();
 
       if (user) {
         push("/");

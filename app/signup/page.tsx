@@ -1,62 +1,26 @@
 "use client";
-import React, { useContext } from "react";
 
-import { AxiosError } from "axios";
-import { useRouter } from "next/navigation";
-import { logInUserType } from "@/services/auth.types";
-import { logInUser } from "@/services/auth.services";
+import React from "react";
 import Link from "next/link";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase";
+import { UserAuth } from "../provider/AuthProvider";
 
 const SignUp = () => {
-  const { push } = useRouter();
+  const { logInHandler } = UserAuth();
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const payload: logInUserType = {
+    logInHandler({
       logInMethod: "email",
+      accountType: "signup",
       user: {
         email: event.currentTarget.email.value,
         password: event.currentTarget.password.value,
       },
-    };
-
-    try {
-      createUserWithEmailAndPassword(
-        auth,
-        event.currentTarget.email.value,
-        event.currentTarget.password.value
-      )
-        .then((data) => {
-          console.log(data);
-          debugger;
-        })
-        .catch((error) => {
-          console.log(error);
-          debugger;
-        });
-      // await logInUser(payload);
-
-      // alert(JSON.stringify(data));
-
-      // // redirect the user to /dashboard
-      // push("/dashboard");
-    } catch (e) {
-      const error = e as AxiosError;
-
-      alert(error.message);
-    }
+    });
   };
 
   const signInWithGoogle = () => {
-    try {
-      push("/dashboard");
-    } catch (e) {
-      const error = e as AxiosError;
-
-      alert(error.message);
-    }
+    logInHandler({ logInMethod: "google" });
   };
 
   return (
@@ -91,7 +55,7 @@ const SignUp = () => {
                 <input
                   id="email"
                   name="email"
-                  type="text"
+                  type="email"
                   // autoComplete="email"
                   required
                   className="block w-full rounded-md border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"

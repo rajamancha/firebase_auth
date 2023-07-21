@@ -7,11 +7,8 @@ export interface UserResponse {
 
 export type logInUserType =
   | {
-      email: string;
-      password: string;
-    }
-  | {
       logInMethod: "email";
+      accountType: "signup" | "login";
       user: {
         email: string;
         password: string;

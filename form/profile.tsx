@@ -1,5 +1,5 @@
 "use client";
-import { UserAuth } from "@/app/provider/AuthProvider";
+import { UserAuth } from "@/provider/AuthProvider";
 import { Input } from "@/components/form";
 
 const profile = () => {

@@ -1,7 +1,5 @@
-import { auth } from "@/app/firebase";
 import { COOKIE_NAME } from "@/constants";
 import { serialize } from "cookie";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { NextResponse } from "next/server";
 
 const MAX_AGE = 60 * 60 * 24 * 30; // days;

@@ -1,6 +1,6 @@
 "use client";
 
-import { UserAuth } from "@/app/provider/AuthProvider";
+import { UserAuth } from "@/provider/AuthProvider";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 

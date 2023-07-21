@@ -1,7 +1,7 @@
 import "./globals.css";
 import { Metadata } from "next";
 import { Header } from "@/components/header";
-import { AuthContextProvider } from "./provider/AuthProvider";
+import { AuthContextProvider } from "@/provider/AuthProvider";
 
 export const metadata: Metadata = {
   title: "Firebase Authentication",

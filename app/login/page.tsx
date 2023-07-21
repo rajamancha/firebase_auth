@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { UserAuth } from "../provider/AuthProvider";
 import { Button, Input } from "@/components/form";
+import { UserAuth } from "@/provider/AuthProvider";
 
 const Login = () => {
   const { logInHandler } = UserAuth();

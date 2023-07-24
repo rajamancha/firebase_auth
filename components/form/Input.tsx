@@ -1,4 +1,4 @@
-import { HTMLInputTypeAttribute } from "react";
+import { ChangeEvent, HTMLInputTypeAttribute } from "react";
 
 type InputProp = {
   type: HTMLInputTypeAttribute;
@@ -6,6 +6,10 @@ type InputProp = {
   name: string;
   label: string;
   disabled?: boolean;
+  placeholder?: string;
+  value?: string;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  accept?: string;
 };
 
 const Input = ({
@@ -14,6 +18,10 @@ const Input = ({
   type,
   required = false,
   disabled = false,
+  accept,
+  value,
+  onChange,
+  placeholder,
 }: InputProp) => {
   return (
     <div className="my-6">
@@ -28,9 +36,13 @@ const Input = ({
           id={name}
           name={name}
           type={type}
+          value={value}
+          accept={accept}
           disabled={disabled}
           autoComplete={name}
           required={required}
+          placeholder={placeholder}
+          onChange={onChange}
           className="block w-full rounded-md border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
         />
       </div>

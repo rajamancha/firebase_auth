@@ -35,3 +35,13 @@ export const logInUser = async (payload: logInUserType) => {
     };
   }
 };
+
+export const UploadImage = async (imgPath: string) => {
+  try {
+    const { data } = await axios.post(`/api/upload`, { path: imgPath });
+    return data;
+  } catch (e) {
+    const error = e as AxiosError;
+    return error;
+  }
+};

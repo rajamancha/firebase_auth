@@ -1,7 +1,7 @@
-import { AppRoute, COOKIE_NAME } from "@/constants";
+import { COOKIE_NAME } from "@/constants";
 import { NextRequest, NextResponse } from "next/server";
 
-const guestRoutes = ["/login", "/signup", "/"];
+const guestRoutes = ["/login", "/signup"];
 
 export async function middleware(request: NextRequest) {
   const token = request.cookies.get(COOKIE_NAME)?.value;

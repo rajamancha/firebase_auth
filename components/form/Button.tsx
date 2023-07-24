@@ -3,13 +3,15 @@ type ButtonProp = {
   type?: "button" | "submit" | "reset";
   variant?: "primary" | "outline";
   onClick?: () => void;
+  className?: string;
 };
 
 const Button = ({
   type,
+  onClick,
+  className = "",
   title = "button",
   variant = "primary",
-  onClick,
 }: ButtonProp) => {
   return (
     <div className="my-6">
@@ -20,7 +22,7 @@ const Button = ({
           variant === "primary"
             ? "bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline-indigo-600"
             : "bg-white text-black hover:bg-gray-200 focus-visible:outline-indigo-600 border-2 border-gray-500"
-        }`}
+        } ${className}`}
       >
         {title}
       </button>

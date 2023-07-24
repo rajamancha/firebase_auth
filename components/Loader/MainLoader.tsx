@@ -1,8 +1,8 @@
 import React from "react";
 
-const Loader = () => {
+const MainLoader = () => {
   return (
-    <div className="flex w-full h-auto items-center justify-center">
+    <div className="flex w-full h-screen items-center justify-center">
       <div role="status">
         <svg
           aria-hidden="true"
@@ -26,4 +26,4 @@ const Loader = () => {
   );
 };
 
-export default Loader;
+export default MainLoader;

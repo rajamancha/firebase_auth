@@ -5,25 +5,35 @@ import {
   GoogleAuthProvider,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  updateProfile,
+  User,
 } from "firebase/auth";
 import { auth } from "../firebase";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
-import { getUser } from "@/services/auth.services";
+import { UploadImage, getUser } from "@/services/auth.services";
 import { logInUserType } from "@/services/auth.types";
 import { useContext, createContext, useState, useEffect } from "react";
+import isBase64DataURL from "@/utils/baseurl";
 
 export interface AuthContextType {
   loader: boolean;
   user: UserCredential["user"] | null;
   logOutHandler: () => Promise<void>;
   logInHandler: (payload: logInUserType) => Promise<void>;
+  handleProfile: (data: HandleProfileType) => {};
 }
+
+export type HandleProfileType = {
+  displayName: string;
+  photoURL: string;
+};
 
 const AuthContext = createContext<AuthContextType>({
   loader: false,
   logInHandler: async () => {},
   logOutHandler: async () => {},
+  handleProfile: async () => {},
   user: null,
 });
 
@@ -48,7 +58,6 @@ export const AuthContextProvider = ({
           return;
         }
       }
-      // if the error did not happen, if everything is alright
       setLoader(false);
     })();
   }, []);
@@ -112,6 +121,7 @@ export const AuthContextProvider = ({
   };
 
   const handleSuccess = async (user: UserCredential["user"]) => {
+    localStorage.removeItem("user");
     localStorage.setItem("user", JSON.stringify(user));
     const { refreshToken } = user;
     await axios.post("api/auth/signupwithgoogle", {
@@ -122,8 +132,49 @@ export const AuthContextProvider = ({
     router.push("/dashboard");
   };
 
+  const handleProfile = async ({
+    displayName,
+    photoURL,
+  }: HandleProfileType) => {
+    setLoader(true);
+
+    try {
+      const isUploadingNewImage  = isBase64DataURL(photoURL)
+
+      if(isUploadingNewImage){
+        const imageUrl = await UploadImage(photoURL);
+        if (imageUrl.url) {
+          photoURL = imageUrl.url
+        }
+      }
+    
+      updateProfile(auth.currentUser as User, {
+        displayName,
+        photoURL,
+      })
+        .then(() => {
+          const user = auth.currentUser;
+          setUser(JSON.parse(JSON.stringify(user)));
+          localStorage.removeItem("user");
+          localStorage.setItem("user", JSON.stringify(user));
+          setLoader(false);
+        })
+        .catch((error) => {
+          alert(error.code);
+        });
+        
+      
+    } catch (error) {
+      alert(JSON.stringify(error));
+    } finally {
+      setLoader(false);
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ loader, user, logOutHandler, logInHandler }}>
+    <AuthContext.Provider
+      value={{ loader, user, logOutHandler, logInHandler, handleProfile }}
+    >
       {children}
     </AuthContext.Provider>
   );

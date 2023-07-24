@@ -1,27 +1,24 @@
 "use client";
-import { UserAuth } from "@/provider/AuthProvider";
-import { Card } from "@/components/card";
-import { Profile } from "@/form";
-import Image from "next/image";
+import { ProfileForm } from "@/form";
+import { useState } from "react";
+import { ProfileCard } from "@/components/card";
 
+export type ProfileType = {
+  editMode: boolean;
+  setEditMode: (value: boolean) => void;
+};
 export default function SettingsPage() {
-  const { user } = UserAuth();
-  // This page is protected
+  const [editMode, setEditMode] = useState(false);
+
+  const props: ProfileType = {
+    editMode,
+    setEditMode,
+  };
+
   return (
     <div className="container">
       <h1 className="text-3xl my-10">Profile</h1>
-      <Card>
-        <div className="flex">
-          <Image
-            src={user?.photoURL ?? ""}
-            alt={user?.displayName ?? "profile pic"}
-            height={100}
-            width={100}
-            className="rounded-full"
-          />
-        </div>
-      </Card>
-      <Profile />
+      {editMode ? <ProfileForm {...props} /> : <ProfileCard {...props} />}
     </div>
   );
 }

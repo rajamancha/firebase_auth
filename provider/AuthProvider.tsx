@@ -55,6 +55,8 @@ export const AuthContextProvider = ({
         setUser(_user);
         if (error) {
           router.push("/");
+          setUser(null);
+          localStorage.removeItem("user");
           return;
         }
       }
@@ -139,15 +141,15 @@ export const AuthContextProvider = ({
     setLoader(true);
 
     try {
-      const isUploadingNewImage  = isBase64DataURL(photoURL)
+      const isUploadingNewImage = isBase64DataURL(photoURL);
 
-      if(isUploadingNewImage){
+      if (isUploadingNewImage) {
         const imageUrl = await UploadImage(photoURL);
         if (imageUrl.url) {
-          photoURL = imageUrl.url
+          photoURL = imageUrl.url;
         }
       }
-    
+
       updateProfile(auth.currentUser as User, {
         displayName,
         photoURL,
@@ -162,8 +164,6 @@ export const AuthContextProvider = ({
         .catch((error) => {
           alert(error.code);
         });
-        
-      
     } catch (error) {
       alert(JSON.stringify(error));
     } finally {
